@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 16:44:23 by misimon           #+#    #+#             */
-/*   Updated: 2022/11/28 21:05:51 by misimon          ###   ########.fr       */
+/*   Updated: 2022/11/30 18:53:38 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_philo
 typedef struct s_ph
 {
 	size_t			nbr_philo;
+	size_t			finish;
 	t_philo			*philo;
 	size_t			position;
 	size_t			time_die;
