@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/11/30 19:19:58 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/02 17:51:47 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,28 @@ t_time	get_time(void)
 	return (get_time.tv_sec * 1000 + get_time.tv_usec / 1000);
 }
 
+t_time	timediff(t_time past, t_time present)
+{
+	return (present - past);
+}
+
+void	ft_sleep(t_time limit, t_time starting)
+{	
+	t_time	time;
+
+	time = get_time();
+	while (time - starting < limit)
+	{
+		time = get_time();
+	}
+}
+
 void	ph_print(t_time time, t_ph *ph, size_t i, char *action)
 {
 	pthread_mutex_lock(&ph->writing);
 	printf("%lldms - %zu - %s !\n", time, ph->philo[i].id, action);
-	pthread_mutex_unlock(&ph->writing);
+	if (ph->finish == 0)
+		pthread_mutex_unlock(&ph->writing);
 }
 
 void	lock_fork(t_ph *ph, size_t i)
@@ -56,18 +73,23 @@ void	*routine(void *arg)
 	i = ph->position;
 	if (i % 2 == 0)
 		usleep(10);
-	while (1)
+	while (ph->finish == 0)
 	{
+		if (get_time() - ph->philo[i].last_eat >= (t_time)ph->time_die)
+		{
+			ph_print(get_time() - ph->starting_time, ph, i, "is dead");
+			break ;
+		}
 		lock_fork(ph, i);
 		ph_print(get_time() - ph->starting_time, ph, i, "is eating");
-		usleep(ph->time_eat * 1000);
+		ft_sleep(ph->time_eat, get_time());
 		ph->philo[i].total_eat++;
+		ph->philo[i].last_eat = get_time();
 		unlock_fork(ph, i);
-		usleep(10);
 		if (ph->nbr_eat != 0 && ph->philo[i].total_eat == ph->nbr_eat)
 			break ;
 		ph_print(get_time() - ph->starting_time, ph, i, "is sleeping");
-		usleep(ph->time_sleep * 1000);
+		ft_sleep(ph->time_sleep, get_time());
 		ph_print(get_time() - ph->starting_time, ph, i, "is thinking");
 	}
 	return (0);

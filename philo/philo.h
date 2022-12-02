@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 16:44:23 by misimon           #+#    #+#             */
-/*   Updated: 2022/11/30 18:53:38 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/02 17:02:51 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,6 @@ t_ph	*init(int argc, char **argv);
 int		write_error(char *str);
 int		create_philo(t_ph *ph);
 void	*null_error(char *str);
+t_time	get_time(void);
 
 #endif
