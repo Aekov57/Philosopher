@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 18:51:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/11/30 19:01:21 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/05 14:28:12 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_ph	*init(int argc, char **argv)
 {
 	t_ph	*ph;
 
-	ph = malloc(sizeof(t_philo));
+	ph = malloc(sizeof(t_ph));
 	if (ph == NULL)
 		return (null_error("MALLOC ALLOCATION FAILED !\n"));
 	give_value(ph, argc, argv);

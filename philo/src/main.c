@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: faventur <faventur@student.42mulhouse.fr>  +#+  +:+       +#+        */
+/*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/05 10:21:22 by faventur         ###   ########.fr       */
+/*   Updated: 2022/12/05 15:06:00 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,22 @@ void	ft_sleep(t_time limit, t_time starting)
 
 void	ph_print(t_time time, t_ph *ph, size_t i, char *action)
 {
-	pthread_mutex_lock(&ph->writing);
-	printf("%lldms - %zu - %s !\n", time, ph->philo[i].id, action);
 	if (ph->finish == 0)
+	{
+		pthread_mutex_lock(&ph->writing);
+		printf("%lldms - %zu - %s !\n", time, ph->philo[i].id, action);
 		pthread_mutex_unlock(&ph->writing);
+	}
+}
+
+void	ph_print_dead(t_time time, t_ph *ph, size_t i, char *action)
+{
+	if (ph->finish == 1)
+	{
+		pthread_mutex_lock(&ph->writing);
+		printf("%lldms - %zu - %s !\n", time, ph->philo[i].id, action);
+		pthread_mutex_lock(&ph->writing);
+	}
 }
 
 void	lock_fork(t_ph *ph, size_t i)
@@ -75,16 +87,17 @@ void	*routine(void *arg)
 		usleep(10);
 	while (ph->finish == 0)
 	{
+		lock_fork(ph, i);
 		if (get_time() - ph->philo[i].last_eat >= (t_time)ph->time_die)
 		{
-			ph_print(get_time() - ph->starting_time, ph, i, "is dead");
+			ph->finish = 1;
+			ph_print_dead(get_time() - ph->starting_time, ph, i, "is dead");
 			break ;
 		}
-		lock_fork(ph, i);
+		ph->philo[i].last_eat = get_time();
 		ph_print(get_time() - ph->starting_time, ph, i, "is eating");
 		ft_sleep(ph->time_eat, get_time());
 		ph->philo[i].total_eat++;
-		ph->philo[i].last_eat = get_time();
 		unlock_fork(ph, i);
 		if (ph->nbr_eat != 0 && ph->philo[i].total_eat == ph->nbr_eat)
 			break ;
@@ -103,15 +116,15 @@ void	create_routine(t_ph *ph)
 	ph->starting_time = get_time();
 	while (ph->position < ph->nbr_philo)
 	{
-		printf("Philo pos : %zu = id : %zu/ %zu\n", ph->position, ph->philo[ph->position].id, ph->nbr_philo);
 		pthread_create(&ph->philo[ph->position].thread, 0, routine, (void *)ph);
-		usleep(10);
+		usleep(100);
 		ph->position++;
 	}
 	i = 0;
 	while (i < ph->nbr_philo)
 	{
 		pthread_join(ph->philo[i].thread, NULL);
+		printf("JOIN\n");
 		i++;
 	}
 }
