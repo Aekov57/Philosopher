@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 18:51:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/11/28 20:20:59 by misimon          ###   ########.fr       */
+/*   Updated: 2022/11/30 19:01:21 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	give_value(t_ph *ph, int argc, char **argv)
 	ph->time_die = ft_atoi(argv[2]);
 	ph->time_eat = ft_atoi(argv[3]);
 	ph->time_sleep = ft_atoi(argv[4]);
+	ph->finish = 0;
 	if (argc > 5)
 		ph->nbr_eat = ft_atoi(argv[5]);
 	else
