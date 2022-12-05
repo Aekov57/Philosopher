@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: faventur <faventur@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/02 17:51:47 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/05 10:21:22 by faventur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,13 @@ void	create_routine(t_ph *ph)
 	ph->starting_time = get_time();
 	while (ph->position < ph->nbr_philo)
 	{
+		printf("Philo pos : %zu = id : %zu/ %zu\n", ph->position, ph->philo[ph->position].id, ph->nbr_philo);
 		pthread_create(&ph->philo[ph->position].thread, 0, routine, (void *)ph);
 		usleep(10);
 		ph->position++;
 	}
 	i = 0;
-	while (i <= ph->nbr_philo)
+	while (i < ph->nbr_philo)
 	{
 		pthread_join(ph->philo[i].thread, NULL);
 		i++;

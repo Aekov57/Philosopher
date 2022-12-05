@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
+/*   By: faventur <faventur@student.42mulhouse.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 16:44:23 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/02 17:02:51 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/05 10:22:01 by faventur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ typedef struct s_philo
 typedef struct s_ph
 {
 	size_t			nbr_philo;
-	size_t			finish;
 	t_philo			*philo;
+	size_t			finish;
 	size_t			position;
 	size_t			time_die;
 	size_t			time_eat;

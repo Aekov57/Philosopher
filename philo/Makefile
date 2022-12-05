@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: misimon <misimon@student.42.fr>            +#+  +:+       +#+         #
+#    By: faventur <faventur@student.42mulhouse.fr>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 16:07:27 by misimon           #+#    #+#              #
-#    Updated: 2022/11/28 21:07:14 by misimon          ###   ########.fr        #
+#    Updated: 2022/12/05 10:26:26 by faventur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,8 @@ SRCS := 	$(SRCS:%=$(SRC_DIR)/%)
 
 #	COMPILATION:
 CC := 		@gcc
-CFLAGS := 	-Wall -Werror -Wextra
-DANGER := -fsanitize=address
+CFLAGS := 	-Wall -Werror -Wextra -g3
+DANGER := -fsanitize=thread
 
 #	STATIC LIB CREATION:
 AR :=		@ar
@@ -57,7 +57,7 @@ $(OBJS_DIR)/%.o : $(SRC_DIR)/%.c
 	@echo "\033[1A\033[0J\033[32;1m\rPhilosopher compilation >>\033[0m\033[30;1m $@\033[0m"
 
 $(NAME) : $(OBJS)
-	$(CC) -o $(NAME) $(OBJS) $(DANGER) -g
+	$(CC) -o $(NAME) $(OBJS) $(DANGER)
 
 clean :
 	$(RM) $(OBJS_DIR)
