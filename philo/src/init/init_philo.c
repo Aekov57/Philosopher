@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 18:51:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/06 17:51:46 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/06 17:59:50 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 t_bool	check_value(t_ph *ph)
 {
-	if (ph->nbr_philo == 0 || ph->time_die == 0 || ph->time_eat == 0 ||
-		ph->time_sleep == 0)
+	if (ph->nbr_philo == 0 || ph->time_die == 0 || ph->time_eat == 0
+		|| ph->time_sleep == 0)
 		return (TRUE);
 	return (FALSE);
 }

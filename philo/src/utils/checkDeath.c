@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 17:34:54 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/06 17:38:32 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/06 18:00:03 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_bool	check_death(t_ph *ph, size_t i)
 {
-	if ((get_time() - ph->philo[i].last_eat >= (t_time)ph->time_die 
+	if ((get_time() - ph->philo[i].last_eat >= (t_time)ph->time_die
 			&& ph->finish == 0) || ph->nbr_philo == 1)
 	{
 		ph->finish = 1;
