@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: faventur <faventur@student.42mulhouse.fr>  +#+  +:+       +#+        */
+/*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 16:44:23 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/05 10:22:01 by faventur         ###   ########.fr       */
+/*   Updated: 2022/12/06 17:51:18 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,13 @@ size_t	ft_atoi(const char *str);
 t_ph	*init(int argc, char **argv);
 int		write_error(char *str);
 int		create_philo(t_ph *ph);
-void	*null_error(char *str);
 t_time	get_time(void);
+void	*null_error(char *str);
+void	ph_print(t_time time, t_ph *ph, size_t i, char *action);
+void	ph_print_dead(t_time time, t_ph *ph, size_t i, char *action);
+void	ft_sleep(t_time limit, t_time starting);
+void	lock_fork(t_ph *ph, size_t i);
+void	unlock_fork(t_ph *ph, size_t i);
+t_bool	check_death(t_ph *ph, size_t i);
 
 #endif

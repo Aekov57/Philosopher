@@ -6,74 +6,26 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/05 15:06:00 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/06 17:52:43 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-t_time	get_time(void)
+void	clean_all(t_ph *ph)
 {
-	struct timeval	get_time;
+	size_t	i;
 
-	gettimeofday(&get_time, NULL);
-	return (get_time.tv_sec * 1000 + get_time.tv_usec / 1000);
-}
-
-t_time	timediff(t_time past, t_time present)
-{
-	return (present - past);
-}
-
-void	ft_sleep(t_time limit, t_time starting)
-{	
-	t_time	time;
-
-	time = get_time();
-	while (time - starting < limit)
+	i = 0;
+	while (i < ph->nbr_philo)
 	{
-		time = get_time();
+		pthread_join(ph->philo[i].thread, NULL);
+		pthread_mutex_destroy(&ph->philo[i].fork);
+		i++;
 	}
-}
-
-void	ph_print(t_time time, t_ph *ph, size_t i, char *action)
-{
-	if (ph->finish == 0)
-	{
-		pthread_mutex_lock(&ph->writing);
-		printf("%lldms - %zu - %s !\n", time, ph->philo[i].id, action);
-		pthread_mutex_unlock(&ph->writing);
-	}
-}
-
-void	ph_print_dead(t_time time, t_ph *ph, size_t i, char *action)
-{
-	if (ph->finish == 1)
-	{
-		pthread_mutex_lock(&ph->writing);
-		printf("%lldms - %zu - %s !\n", time, ph->philo[i].id, action);
-		pthread_mutex_lock(&ph->writing);
-	}
-}
-
-void	lock_fork(t_ph *ph, size_t i)
-{
-	pthread_mutex_lock(&ph->philo[i].fork);
-	ph_print(get_time() - ph->starting_time, ph, i, "is taking fork");
-	if (i + 1 > ph->nbr_philo)
-		pthread_mutex_lock(&ph->philo[0].fork);
-	else
-		pthread_mutex_lock(&ph->philo[i + 1].fork);
-	ph_print(get_time() - ph->starting_time, ph, i, "is taking fork");
-}
-
-void	unlock_fork(t_ph *ph, size_t i)
-{
-	pthread_mutex_unlock(&ph->philo[i].fork);
-	if (i + 1 > ph->nbr_philo)
-		pthread_mutex_unlock(&ph->philo[0].fork);
-	else
-		pthread_mutex_unlock(&ph->philo[i + 1].fork);
+	pthread_mutex_destroy(&ph->writing);
+	free(ph->philo);
+	free(ph);
 }
 
 void	*routine(void *arg)
@@ -88,16 +40,13 @@ void	*routine(void *arg)
 	while (ph->finish == 0)
 	{
 		lock_fork(ph, i);
-		if (get_time() - ph->philo[i].last_eat >= (t_time)ph->time_die)
-		{
-			ph->finish = 1;
-			ph_print_dead(get_time() - ph->starting_time, ph, i, "is dead");
+		if (check_death(ph, i) == TRUE)
 			break ;
-		}
 		ph->philo[i].last_eat = get_time();
 		ph_print(get_time() - ph->starting_time, ph, i, "is eating");
 		ft_sleep(ph->time_eat, get_time());
-		ph->philo[i].total_eat++;
+		if (ph->nbr_eat != 0)
+			ph->philo[i].total_eat++;
 		unlock_fork(ph, i);
 		if (ph->nbr_eat != 0 && ph->philo[i].total_eat == ph->nbr_eat)
 			break ;
@@ -110,8 +59,6 @@ void	*routine(void *arg)
 
 void	create_routine(t_ph *ph)
 {
-	size_t	i;
-
 	ph->position = 0;
 	ph->starting_time = get_time();
 	while (ph->position < ph->nbr_philo)
@@ -120,13 +67,7 @@ void	create_routine(t_ph *ph)
 		usleep(100);
 		ph->position++;
 	}
-	i = 0;
-	while (i < ph->nbr_philo)
-	{
-		pthread_join(ph->philo[i].thread, NULL);
-		printf("JOIN\n");
-		i++;
-	}
+	clean_all(ph);
 }
 
 int	main(int argc, char **argv)

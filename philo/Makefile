@@ -6,7 +6,7 @@
 #    By: misimon <misimon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 16:07:27 by misimon           #+#    #+#              #
-#    Updated: 2022/12/05 14:57:19 by misimon          ###   ########.fr        #
+#    Updated: 2022/12/06 17:38:56 by misimon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,16 @@ NAME	:= 	philo
 #	FILE :
 SRC_DIR	:= 	src
 
-SRCS	:=	main.c					\
-			utils/ft_atoi.c			\
-			utils/error.c			\
-			init/init_philo.c		\
-			init/create_philo.c		\
+SRCS	:=	main.c						\
+			utils/ft_atoi.c				\
+			utils/error.c				\
+			utils/forkHandler.c			\
+			utils/checkDeath.c			\
+			init/init_philo.c			\
+			init/create_philo.c			\
+			print/ph_print.c			\
+			timeHandler/ft_sleep.c		\
+			timeHandler/get_time.c		\
 
 SRCS := 	$(SRCS:%=$(SRC_DIR)/%)
 
