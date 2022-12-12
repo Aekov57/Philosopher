@@ -6,29 +6,30 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 17:18:29 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/06 18:08:28 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/12 15:39:05 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../philo.h"
 
-void	lock_fork(t_ph *ph, size_t i)
+void	lock_fork(t_philo philo)
 {
-	pthread_mutex_lock(&ph->philo[i].fork);
-	ph_print(get_time() - ph->starting_time, ph, i, "has taken a fork");
-	if (i + 1 > ph->nbr_philo && ph->nbr_philo != 1)
-		pthread_mutex_lock(&ph->philo[0].fork);
-	else
-		pthread_mutex_lock(&ph->philo[i + 1].fork);
-	if (ph->nbr_philo != 1)
-		ph_print(get_time() - ph->starting_time, ph, i, "has taken a fork");
+	pthread_mutex_lock(&philo.fork);
+	if (philo.rules->finish == FALSE)
+		ph_print(philo, "has taken a fork");
+	if (philo.id + 1 > philo.rules->nbr_philo && philo.rules->nbr_philo != 1)
+		pthread_mutex_lock(&philo.rules->philo[0].fork);
+	else if (philo.id <= philo.rules->nbr_philo && philo.rules->nbr_philo != 1)
+		pthread_mutex_lock(&philo.rules->philo[philo.id].fork);
+	if (philo.rules->nbr_philo != 1 && philo.rules->finish == FALSE)
+		ph_print(philo, "has taken a fork");
 }
 
-void	unlock_fork(t_ph *ph, size_t i)
+void	unlock_fork(t_philo philo)
 {
-	pthread_mutex_unlock(&ph->philo[i].fork);
-	if (i + 1 > ph->nbr_philo)
-		pthread_mutex_unlock(&ph->philo[0].fork);
-	else
-		pthread_mutex_unlock(&ph->philo[i + 1].fork);
+	pthread_mutex_unlock(&philo.fork);
+	if (philo.id + 1 > philo.rules->nbr_philo)
+		pthread_mutex_unlock(&philo.rules->philo[0].fork);
+	else if (philo.id <= philo.rules->nbr_philo && philo.rules->nbr_philo != 1)
+		pthread_mutex_unlock(&philo.rules->philo[philo.id].fork);
 }

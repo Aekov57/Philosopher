@@ -6,7 +6,7 @@
 #    By: misimon <misimon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 16:07:27 by misimon           #+#    #+#              #
-#    Updated: 2022/12/06 17:38:56 by misimon          ###   ########.fr        #
+#    Updated: 2022/12/12 15:05:42 by misimon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,11 +58,11 @@ all : $(NAME)
 
 $(OBJS_DIR)/%.o : $(SRC_DIR)/%.c
 	$(DUP_DIR)
-	$(CC) $(CFLAGS) -c -o $@ $< $(DANGER)
+	$(CC) $(CFLAGS) -c -o $@ $< 
 	@echo "\033[1A\033[0J\033[32;1m\rPhilosopher compilation >>\033[0m\033[30;1m $@\033[0m"
 
 $(NAME) : $(OBJS)
-	$(CC) -o $(NAME) $(OBJS) $(DANGER)
+	$(CC) -o $(NAME) $(OBJS) 
 
 clean :
 	$(RM) $(OBJS_DIR)

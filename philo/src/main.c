@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/07 19:10:32 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/12 16:10:12 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,45 +28,51 @@ void	clean_all(t_ph *ph)
 	free(ph);
 }
 
+void	start_eating(t_philo philo)
+{
+	lock_fork(philo);
+	philo.last_eat = get_time();
+	if (philo.rules->finish == FALSE)
+		ph_print(philo, "is eating");
+	philo.total_eat++;
+	ft_sleep(philo.rules->time_eat);
+	unlock_fork(philo);
+}
+
 void	*routine(void *arg)
 {
-	t_ph	*ph;
-	size_t	i;
+	t_philo	philo;
 
-	ph = (t_ph *)arg;
-	i = ph->position;
-	if (i % 2 == 0)
-		usleep(10);
-	while (ph->finish == 0)
+	philo = *(t_philo *)arg;
+	if (philo.id % 2 == 0)
+		ft_sleep(philo.rules->time_sleep);
+	while (philo.rules->finish == FALSE)
 	{
-		lock_fork(ph, i);
-		if (check_death(ph, i) == TRUE)
+		lock_fork(philo);
+		if (check_death(philo) == TRUE)
 			break ;
-		ph->philo[i].last_eat = get_time();
-		ph_print(get_time() - ph->starting_time, ph, i, "is eating");
-		ft_sleep(ph->time_eat, get_time());
-		if (ph->nbr_eat != 0)
-			ph->philo[i].total_eat++;
-		unlock_fork(ph, i);
-		if (ph->nbr_eat != 0 && ph->philo[i].total_eat == ph->nbr_eat)
-			break ;
-		ph_print(get_time() - ph->starting_time, ph, i, "is sleeping");
-		ft_sleep(ph->time_sleep, get_time());
-		ph_print(get_time() - ph->starting_time, ph, i, "is thinking");
+		philo.last_eat = get_time();
+		ph_print(philo, "is eating");
+		philo.total_eat++;
+		ft_sleep(philo.rules->time_eat);
+		unlock_fork(philo);
+		if (philo.rules->nbr_eat != 0 && philo.total_eat == philo.rules->nbr_eat)
+			break ; 
+		ph_print(philo, "is sleeping");
+		ft_sleep(philo.rules->time_sleep);
+		ph_print(philo, "is thinking");
 	}
 	return (0);
 }
 
 void	create_routine(t_ph *ph)
 {
-	ph->position = 0;
+	size_t	i;
+
+	i = -1;
 	ph->starting_time = get_time();
-	while (ph->position < ph->nbr_philo)
-	{
-		pthread_create(&ph->philo[ph->position].thread, 0, routine, (void *)ph);
-		usleep(100);
-		ph->position++;
-	}
+	while (++i < ph->nbr_philo)
+		pthread_create(&ph->philo[i].thread, 0, routine, &ph->philo[i]);
 	clean_all(ph);
 }
 

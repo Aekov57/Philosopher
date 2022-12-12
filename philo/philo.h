@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 16:44:23 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/06 17:51:18 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/12 15:04:42 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_philo
 	pthread_mutex_t	fork;
 	t_time			last_eat;
 	size_t			total_eat;
+	struct s_ph		*rules;
 }	t_philo;
 
 typedef struct s_ph
@@ -42,10 +43,9 @@ typedef struct s_ph
 	size_t			nbr_philo;
 	t_philo			*philo;
 	size_t			finish;
-	size_t			position;
-	size_t			time_die;
-	size_t			time_eat;
-	size_t			time_sleep;
+	t_time			time_die;
+	t_time			time_eat;
+	t_time			time_sleep;
 	size_t			nbr_eat;
 	pthread_mutex_t	writing;
 	t_time			starting_time;
@@ -58,11 +58,11 @@ int		write_error(char *str);
 int		create_philo(t_ph *ph);
 t_time	get_time(void);
 void	*null_error(char *str);
-void	ph_print(t_time time, t_ph *ph, size_t i, char *action);
-void	ph_print_dead(t_time time, t_ph *ph, size_t i, char *action);
-void	ft_sleep(t_time limit, t_time starting);
-void	lock_fork(t_ph *ph, size_t i);
-void	unlock_fork(t_ph *ph, size_t i);
-t_bool	check_death(t_ph *ph, size_t i);
+void	ph_print(t_philo philo, char *action);
+void	ph_print_dead(t_philo philo, char *action);
+void	ft_sleep(t_time limit);
+void	lock_fork(t_philo philo);
+void	unlock_fork(t_philo philo);
+t_bool	check_death(t_philo philo);
 
 #endif

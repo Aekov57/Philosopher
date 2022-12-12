@@ -6,29 +6,31 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 16:41:00 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/06 18:17:34 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/12 15:14:36 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../philo.h"
 
-void	ph_print(t_time time, t_ph *ph, size_t i, char *action)
+void	ph_print(t_philo philo, char *action)
 {
-	if (ph->finish == 0)
+	if (philo.rules->finish == FALSE)
 	{
-		pthread_mutex_lock(&ph->writing);
-		if (ph->finish == 0)
-			printf("%lldms %zu %s !\n", time, ph->philo[i].id, action);
-		pthread_mutex_unlock(&ph->writing);
+		pthread_mutex_lock(&philo.rules->writing);
+		if (philo.rules->finish == FALSE)
+			printf("%lldms %zu %s !\n", get_time() - philo.rules->starting_time,
+				philo.id, action);
+		pthread_mutex_unlock(&philo.rules->writing);
 	}
 }
 
-void	ph_print_dead(t_time time, t_ph *ph, size_t i, char *action)
+void	ph_print_dead(t_philo philo, char *action)
 {
-	if (ph->finish == 1)
+	if (philo.rules->finish == TRUE)
 	{
-		pthread_mutex_lock(&ph->writing);
-		printf("%lldms %zu %s !\n", time, ph->philo[i].id, action);
-		pthread_mutex_unlock(&ph->writing);
+		pthread_mutex_lock(&philo.rules->writing);
+		printf("%lldms %zu %s !\n", get_time() - philo.rules->starting_time
+			+ philo.rules->time_die, philo.id, action);
+		pthread_mutex_unlock(&philo.rules->writing);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 21:04:31 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/02 17:21:26 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/12 07:44:27 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	create_philo(t_ph *ph)
 	{
 		ph->philo[i].id = i + 1;
 		ph->philo[i].last_eat = get_time();
+		ph->philo[i].rules = ph;
 		if (pthread_mutex_init(&ph->philo[i].fork, NULL) != 0)
 			return (write_error("MUTEX INIT FAILED !\n"));
 		ph->philo[i].total_eat = 0;
