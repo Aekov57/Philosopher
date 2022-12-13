@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/12 16:10:12 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/13 17:07:34 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,22 @@ void	clean_all(t_ph *ph)
 	size_t	i;
 
 	i = 0;
+	pthread_mutex_destroy(&ph->writing);
 	while (i < ph->nbr_philo)
 	{
 		pthread_join(ph->philo[i].thread, NULL);
 		pthread_mutex_destroy(&ph->philo[i].fork);
 		i++;
 	}
-	pthread_mutex_destroy(&ph->writing);
 	free(ph->philo);
 	free(ph);
 }
 
-void	start_eating(t_philo philo)
+void philo_eating(t_philo philo)
 {
 	lock_fork(philo);
+	ph_print(philo, "is eating");
 	philo.last_eat = get_time();
-	if (philo.rules->finish == FALSE)
-		ph_print(philo, "is eating");
 	philo.total_eat++;
 	ft_sleep(philo.rules->time_eat);
 	unlock_fork(philo);
@@ -48,21 +47,42 @@ void	*routine(void *arg)
 		ft_sleep(philo.rules->time_sleep);
 	while (philo.rules->finish == FALSE)
 	{
-		lock_fork(philo);
-		if (check_death(philo) == TRUE)
-			break ;
-		philo.last_eat = get_time();
-		ph_print(philo, "is eating");
-		philo.total_eat++;
-		ft_sleep(philo.rules->time_eat);
-		unlock_fork(philo);
+		philo_eating(philo);
 		if (philo.rules->nbr_eat != 0 && philo.total_eat == philo.rules->nbr_eat)
-			break ; 
+		{
+			philo.rules->all_eat++;
+			break ;
+		}
 		ph_print(philo, "is sleeping");
 		ft_sleep(philo.rules->time_sleep);
 		ph_print(philo, "is thinking");
 	}
 	return (0);
+}
+
+		// if (check_death(philo) == TRUE)
+		// 	break ;
+
+void death_checker(t_ph *ph)
+{
+	size_t	i;
+
+	while (ph->finish == FALSE && ph->all_eat != ph->nbr_philo)
+	{
+		i = 0;
+		while (i < ph->nbr_philo)
+		{
+			if (get_time() - ph->philo[i].last_eat >= ph->time_die)
+			{
+				pthread_mutex_unlock(&ph->writing);
+				ph->finish = TRUE;
+				ph_print_dead(ph->philo[i], "is dead");
+				return ;
+			}
+			i++;
+		}
+		usleep(50);
+	}
 }
 
 void	create_routine(t_ph *ph)
@@ -73,6 +93,7 @@ void	create_routine(t_ph *ph)
 	ph->starting_time = get_time();
 	while (++i < ph->nbr_philo)
 		pthread_create(&ph->philo[i].thread, 0, routine, &ph->philo[i]);
+	death_checker(ph);
 	clean_all(ph);
 }
 
