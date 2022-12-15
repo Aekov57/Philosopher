@@ -6,7 +6,7 @@
 #    By: misimon <misimon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 16:07:27 by misimon           #+#    #+#              #
-#    Updated: 2022/12/15 14:41:32 by misimon          ###   ########.fr        #
+#    Updated: 2022/12/15 15:16:21 by misimon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ SRCS := 	$(SRCS:%=$(SRC_DIR)/%)
 #	COMPILATION:
 CC := 		@gcc
 CFLAGS := 	-Wall -Werror -Wextra -g3
-DANGER := -fsanitize=thread
+DANGER := -fsanitize=address
 
 #	STATIC LIB CREATION:
 AR :=		@ar

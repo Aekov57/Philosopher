@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/15 14:47:32 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/15 15:39:04 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,13 @@ void	clean_all(t_ph *ph)
 void	philo_eating(t_philo *philo)
 {
 	lock_fork(philo);
-	ph_print(philo, "is eating");
-	philo->last_eat = get_time();
-	philo->total_eat++;
-	ft_sleep(philo->rules->time_eat);
+	if (philo->rules->nbr_philo != 1)
+	{
+		ph_print(philo, "is eating");
+		philo->last_eat = get_time();
+		philo->total_eat++;
+		ft_sleep(philo->rules->time_eat);
+	}
 	unlock_fork(philo);
 }
 
@@ -48,12 +51,14 @@ void	*routine(void *arg)
 	while (philo->rules->finish == FALSE)
 	{
 		philo_eating(philo);
-		if (philo->rules->nbr_eat != 0 && philo->total_eat
-			== philo->rules->nbr_eat)
+		if ((philo->rules->nbr_eat != 0 && philo->total_eat
+				== philo->rules->nbr_eat))
 		{
 			philo->rules->all_eat++;
 			break ;
 		}
+		if (philo->rules->nbr_philo == 1)
+			ft_sleep(philo->rules->time_die + 100);
 		ph_print(philo, "is sleeping");
 		ft_sleep(philo->rules->time_sleep);
 		ph_print(philo, "is thinking");
