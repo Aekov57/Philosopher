@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/13 17:07:34 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/15 14:47:32 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,61 +28,37 @@ void	clean_all(t_ph *ph)
 	free(ph);
 }
 
-void philo_eating(t_philo philo)
+void	philo_eating(t_philo *philo)
 {
 	lock_fork(philo);
 	ph_print(philo, "is eating");
-	philo.last_eat = get_time();
-	philo.total_eat++;
-	ft_sleep(philo.rules->time_eat);
+	philo->last_eat = get_time();
+	philo->total_eat++;
+	ft_sleep(philo->rules->time_eat);
 	unlock_fork(philo);
 }
 
 void	*routine(void *arg)
 {
-	t_philo	philo;
+	t_philo	*philo;
 
-	philo = *(t_philo *)arg;
-	if (philo.id % 2 == 0)
-		ft_sleep(philo.rules->time_sleep);
-	while (philo.rules->finish == FALSE)
+	philo = (t_philo *)arg;
+	if (philo->id % 2 == 0)
+		ft_sleep(philo->rules->time_sleep);
+	while (philo->rules->finish == FALSE)
 	{
 		philo_eating(philo);
-		if (philo.rules->nbr_eat != 0 && philo.total_eat == philo.rules->nbr_eat)
+		if (philo->rules->nbr_eat != 0 && philo->total_eat
+			== philo->rules->nbr_eat)
 		{
-			philo.rules->all_eat++;
+			philo->rules->all_eat++;
 			break ;
 		}
 		ph_print(philo, "is sleeping");
-		ft_sleep(philo.rules->time_sleep);
+		ft_sleep(philo->rules->time_sleep);
 		ph_print(philo, "is thinking");
 	}
 	return (0);
-}
-
-		// if (check_death(philo) == TRUE)
-		// 	break ;
-
-void death_checker(t_ph *ph)
-{
-	size_t	i;
-
-	while (ph->finish == FALSE && ph->all_eat != ph->nbr_philo)
-	{
-		i = 0;
-		while (i < ph->nbr_philo)
-		{
-			if (get_time() - ph->philo[i].last_eat >= ph->time_die)
-			{
-				pthread_mutex_unlock(&ph->writing);
-				ph->finish = TRUE;
-				ph_print_dead(ph->philo[i], "is dead");
-				return ;
-			}
-			i++;
-		}
-		usleep(50);
-	}
 }
 
 void	create_routine(t_ph *ph)

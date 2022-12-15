@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 16:44:23 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/13 17:03:47 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/15 14:47:47 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ int		write_error(char *str);
 int		create_philo(t_ph *ph);
 t_time	get_time(void);
 void	*null_error(char *str);
-void	ph_print(t_philo philo, char *action);
-void	ph_print_dead(t_philo philo, char *action);
+void	ph_print(t_philo *philo, char *action);
+void	ph_print_dead(t_philo *philo, char *action);
 void	ft_sleep(t_time limit);
-void	lock_fork(t_philo philo);
-void	unlock_fork(t_philo philo);
-t_bool	check_death(t_philo philo);
+void	lock_fork(t_philo *philo);
+void	unlock_fork(t_philo *philo);
+void	death_checker(t_ph *ph);
 
 #endif

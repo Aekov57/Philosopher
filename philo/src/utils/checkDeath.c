@@ -6,25 +6,27 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 17:34:54 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/12 15:23:24 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/15 14:48:28 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../philo.h"
 
-t_bool	time_range(t_philo philo)
+void	death_checker(t_ph *ph)
 {
-	return (get_time() - philo.last_eat >= philo.rules->time_die);
-}
+	size_t	i;
 
-t_bool	check_death(t_philo philo)
-{
-	if ((time_range(philo) && philo.rules->finish == FALSE)
-		|| philo.rules->nbr_philo == 1)
+	while (ph->finish == FALSE && ph->all_eat != ph->nbr_philo)
 	{
-		philo.rules->finish = TRUE;
-		ph_print_dead(philo, "died");
-		return (TRUE);
+		i = 0;
+		while (i < ph->nbr_philo && ph->finish == FALSE)
+		{
+			if (get_time() - ph->philo[i].last_eat > ph->time_die)
+			{
+				ph->finish = TRUE;
+				ph_print_dead(&ph->philo[i], "is dead");
+			}
+			i++;
+		}
 	}
-	return (FALSE);
 }

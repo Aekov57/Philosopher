@@ -6,7 +6,7 @@
 #    By: misimon <misimon@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 16:07:27 by misimon           #+#    #+#              #
-#    Updated: 2022/12/12 15:05:42 by misimon          ###   ########.fr        #
+#    Updated: 2022/12/15 14:41:32 by misimon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ SRCS := 	$(SRCS:%=$(SRC_DIR)/%)
 #	COMPILATION:
 CC := 		@gcc
 CFLAGS := 	-Wall -Werror -Wextra -g3
-DANGER := -fsanitize=address
+DANGER := -fsanitize=thread
 
 #	STATIC LIB CREATION:
 AR :=		@ar
@@ -58,11 +58,11 @@ all : $(NAME)
 
 $(OBJS_DIR)/%.o : $(SRC_DIR)/%.c
 	$(DUP_DIR)
-	$(CC) $(CFLAGS) -c -o $@ $< 
+	$(CC) $(CFLAGS) -c -o $@ $<
 	@echo "\033[1A\033[0J\033[32;1m\rPhilosopher compilation >>\033[0m\033[30;1m $@\033[0m"
 
 $(NAME) : $(OBJS)
-	$(CC) -o $(NAME) $(OBJS) 
+	$(CC) -o $(NAME) $(OBJS)
 
 clean :
 	$(RM) $(OBJS_DIR)
