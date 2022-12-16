@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 16:44:23 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/15 14:47:47 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/16 09:24:47 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_ph
 	t_time			time_sleep;
 	size_t			nbr_eat;
 	pthread_mutex_t	writing;
+	pthread_mutex_t	check_eating;
 	t_time			starting_time;
 	t_bool			error;
 }	t_ph;

@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:40:09 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/15 15:39:04 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/16 09:52:07 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	clean_all(t_ph *ph)
 
 	i = 0;
 	pthread_mutex_destroy(&ph->writing);
+	pthread_mutex_destroy(&ph->check_eating);
 	while (i < ph->nbr_philo)
 	{
 		pthread_join(ph->philo[i].thread, NULL);
@@ -33,10 +34,17 @@ void	philo_eating(t_philo *philo)
 	lock_fork(philo);
 	if (philo->rules->nbr_philo != 1)
 	{
+		pthread_mutex_lock(&philo->rules->check_eating);
 		ph_print(philo, "is eating");
 		philo->last_eat = get_time();
-		philo->total_eat++;
+		pthread_mutex_unlock(&philo->rules->check_eating);
+		if (philo->rules->finish == TRUE)
+		{
+			unlock_fork(philo);
+			return ;
+		}
 		ft_sleep(philo->rules->time_eat);
+		philo->total_eat++;
 	}
 	unlock_fork(philo);
 }
@@ -51,6 +59,8 @@ void	*routine(void *arg)
 	while (philo->rules->finish == FALSE)
 	{
 		philo_eating(philo);
+		if (philo->rules->finish == TRUE)
+			break ;
 		if ((philo->rules->nbr_eat != 0 && philo->total_eat
 				== philo->rules->nbr_eat))
 		{

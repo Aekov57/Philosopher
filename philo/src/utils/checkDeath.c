@@ -6,7 +6,7 @@
 /*   By: misimon <misimon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/06 17:34:54 by misimon           #+#    #+#             */
-/*   Updated: 2022/12/15 15:29:33 by misimon          ###   ########.fr       */
+/*   Updated: 2022/12/16 09:43:28 by misimon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,15 @@ void	death_checker(t_ph *ph)
 		i = 0;
 		while (i < ph->nbr_philo && ph->finish == FALSE)
 		{
+			pthread_mutex_lock(&ph->check_eating);
 			if ((get_time() - ph->philo[i].last_eat > ph->time_die))
 			{
 				ph->finish = TRUE;
 				ph_print_dead(&ph->philo[i], "is dead");
 			}
+			pthread_mutex_unlock(&ph->check_eating);
 			i++;
 		}
+		usleep(50);
 	}
 }
